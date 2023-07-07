@@ -1,2 +1,18 @@
 # muscle-fatigue
-This is one of my capstone project for "Biomedical Signal Analysis" course.
+This is my capstone project for the "Biomedical Signal Analysis" course.
+
+I acquired an _erector spinae_ muscle signal using Myoware and Arduino. There were 5 subjects in this project. The EMG signals of each subject were recorded using Myoware and sampled at a rate of 1000 Hz. The subjects were required to control the driving simulation for a duration of 20-30 minutes. The duration was adjusted based on the subject's ability to maintain the driving position until muscle fatigue occurred.
+
+The raw EMG signals are initially processed with data visualization to facilitate a visual understanding of the characteristics and patterns of the data. This aids in the identification of trends, changes, or anomalies in the data. Subsequently, data segmentation is performed, which groups the data into smaller segments.
+
+The obtained data is then filtered using a 4th Order Butterworth Bandpass Filter with a range of 20-499 Hz to clean or remove unwanted noise from the data. A 4th Order Butterworth Bandpass Filter means that the filter only allows frequency components within a specific frequency range to pass through.
+
+In order to transform the raw EMG (electromyography) signal into a set of numerical features that capture relevant information, feature extraction is employed. The features can be categorized into Frequency series and Time series. Mean Frequency (MNF) and Median Frequency (MDF) are critical features in the frequency series. As for the time series, the following features are employed: Root Mean Square (RMS), Mean Absolute Value (MAV), Standard Deviation (STD), Total Power (TTP), and Mean Power (MNP).
+
+The features of the filtered EMG signals were computed using the sliding window technique. The window size was 250 samples, with 125 samples as the increment to windowing the data. I need to write the feature extraction code twice since we must extract the feature in the time and frequency domains. In order to augment the data, we need to segment the data, with each segment consisting of 30 seconds of data. Each segment (containing 5010 sample data) will be operated on this sliding window technique. One segment will produce several feature extractions. Each feature extraction will be averaged to obtain the value of each feature for one segment. The same thing will be done both in fatigue and non-fatigue condition. Then, we labelled the feature based on the condition and merged it into one data frame as the final feature or input data for the classification. 
+
+The final input data for the classifier contains 90 data for non-fatigue conditions and 42 for fatigue conditions. We also saw the data distribution; some features have outliers. So, we need to do the capping method to handle the outliers.
+
+In the classification process, the classifier method is responsible for training the model on the training data. Then, the test data is called upon to make predictions on the target variable. Furthermore, the evaluation metrics are applied to measure the performance of each classifier. Additionally, these metrics enable the distinction between positive and negative classes based on predicted probabilities. A high value of Recall Weighted Average indicates a well-performing classifier. I tried several machine learning models: Random Forest, Hyperparameter Tuning RF, XGBoost, and AdaBoost.
+
+Using Recal Weighted-Average evaluation metrics, XGboost performs the best model to predict muscle fatigue with 96% value. XGboost has a high recall weighted average score, using ensemble techniques (gradient boosting) to combine multiple simple decision models into a more complex model. XGBoost can achieve high accuracy on complex datasets with large features. However, XGBoost is sensitive to noisy data and can impact the model’s performance.
